@@ -674,7 +674,7 @@ class ToyCalculator:
         test_stat="qtilde",
         ntoys=2000,
         track_progress=True,
-        skip_failing_toys = False,
+        skip_failing_toys=False,
     ):
         r"""
         Toy-based Calculator.
@@ -756,7 +756,7 @@ class ToyCalculator:
 
         """
 
-        print('skip?',self.skip_failing_toys)
+        print('skip?', self.skip_failing_toys)
 
         tensorlib, _ = get_backend()
         sample_shape = (self.ntoys,)
@@ -796,14 +796,14 @@ class ToyCalculator:
 
         signal_teststat = []
         for sample in tqdm.tqdm(signal_sample, **tqdm_options, desc='Signal-like'):
-            try: 
+            try:
                 value = teststat_func(
-                        poi_test,
-                        sample,
-                        self.pdf,
-                        self.init_pars,
-                        self.par_bounds,
-                        self.fixed_params,
+                    poi_test,
+                    sample,
+                    self.pdf,
+                    self.init_pars,
+                    self.par_bounds,
+                    self.fixed_params,
                 )
             except RuntimeError:
                 if self.skip_failing_toys:
@@ -812,20 +812,18 @@ class ToyCalculator:
                     raise
 
             if (value is not None) and (tensorlib.isfinite(value)):
-                signal_teststat.append(
-                    value    
-                )
+                signal_teststat.append(value)
 
         bkg_teststat = []
         for sample in tqdm.tqdm(bkg_sample, **tqdm_options, desc='Background-like'):
-            try: 
+            try:
                 value = teststat_func(
-                        poi_test,
-                        sample,
-                        self.pdf,
-                        self.init_pars,
-                        self.par_bounds,
-                        self.fixed_params,
+                    poi_test,
+                    sample,
+                    self.pdf,
+                    self.init_pars,
+                    self.par_bounds,
+                    self.fixed_params,
                 )
             except RuntimeError:
                 if self.skip_failing_toys:
@@ -834,9 +832,7 @@ class ToyCalculator:
                     raise
 
             if (value is not None) and (tensorlib.isfinite(value)):
-                bkg_teststat.append(
-                    value
-                )
+                bkg_teststat.append(value)
 
         s_plus_b = EmpiricalDistribution(tensorlib.astensor(signal_teststat))
         b_only = EmpiricalDistribution(tensorlib.astensor(bkg_teststat))
