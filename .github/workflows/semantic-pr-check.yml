@@ -24,6 +24,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Check PR title matches Conventional Commits spec
         uses: amannn/action-semantic-pull-request@v5
         env:
